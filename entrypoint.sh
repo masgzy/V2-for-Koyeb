@@ -16,10 +16,15 @@ rm -f config.json
 
 # 哪吒监控安装部分（保持您的URL，只修正变量名）
 TLS=${NEZHA_TLS:+'--tls'}
-if [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ] && [ -n "${NEZHA_KEY}" ] && [ -n "${NEZHA_UUID}" ]; then
+if [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ] && [ -n "${NEZHA_KEY}" ] ; then
     curl -L https://raw.githubusercontent.com/nezhahq/scripts/main/agent/install.sh -o agent.sh
     chmod +x agent.sh
-    env NZ_SERVER="${NEZHA_SERVER}:${NEZHA_PORT}" NZ_TLS="${NEZHA_TLS}" NZ_CLIENT_SECRET="${NEZHA_KEY}" NZ_UUID="${NEZHA_UUID}" ./agent.sh
+    if [ -z "${NEZHA_UUID}" ]; then
+      env NZ_SERVER="${NEZHA_SERVER}:${NEZHA_PORT}" NZ_TLS=true NZ_CLIENT_SECRET="${NEZHA_KEY}" ./agent.sh
+    else
+      env NZ_SERVER="${NEZHA_SERVER}:${NEZHA_PORT}" NZ_TLS=true NZ_CLIENT_SECRET="${NEZHA_KEY}" NZ_UUID="${NEZHA_UUID}" ./agent.sh
+    fi
+
     rm -f agent.sh
 fi
 
